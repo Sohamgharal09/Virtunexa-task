@@ -1,0 +1,59 @@
+import time
+import requests
+
+# Function to set a reminder
+def set_reminder(task, delay):
+    print(f"Reminder set for '{task}' in {delay} seconds.")
+    time.sleep(delay)
+    print(f"Reminder: {task}")
+
+# Function to answer simple questions
+def answer_question(question):
+    faq = {
+        "what is your name": "I am your Virtual Assistant!",
+        "how are you": "I'm just a program, but I'm functioning as expected!",
+        "what is python": "Python is a versatile programming language.",
+    }
+    return faq.get(question.lower(), "I'm sorry, I don't know the answer to that.")
+
+# Function to fetch weather information
+def get_weather(city):
+    api_key = "79594a2455c8996581372c444878c9c7"  # Your OpenWeatherMap API key
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            weather = data["weather"][0]["description"]
+            temperature = data["main"]["temp"]
+            return f"The weather in {city} is {weather} with a temperature of {temperature}°C."
+        else:
+            return "Could not fetch the weather. Please check the city name."
+    except requests.exceptions.RequestException:
+        return "Failed to connect to the weather service."
+
+# Main program loop
+def main():
+    print("Welcome to the Virtual Assistant!")
+    while True:
+        print("\nOptions: \n1. Set Reminder \n2. Ask a Question \n3. Get Weather \n4. Exit")
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == "1":
+            task = input("What should I remind you about? ")
+            delay = int(input("In how many seconds? "))
+            set_reminder(task, delay)
+        elif choice == "2":
+            question = input("Ask me a question: ")
+            print("Answer:", answer_question(question))
+        elif choice == "3":
+            city = input("Enter the city name: ")
+            print(get_weather(city))
+        elif choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if _name_ == "_main_":
+    main()
